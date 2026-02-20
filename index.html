@@ -77,6 +77,13 @@
             padding: 30px;
             border: 1px solid rgba(255,255,255,0.05);
         }
+        .project-img {
+            width: 250px;
+            border-radius: 10px;
+            margin-right: 25px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
         .project-content { flex: 1; }
         .project h3 { font-size: 1.5rem; margin-bottom: 10px; }
         .tag { 
@@ -118,6 +125,7 @@
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .project { flex-direction: column; text-align: left; }
+            .project-img { width: 100%; margin-right: 0; margin-bottom: 20px; }
         }
     </style>
 </head>
@@ -182,6 +190,16 @@
         </div>
 
         <h2 class="section-title" style="margin-top: 60px;">Featured Projects</h2>
+
+        <div class="project">
+            <img src="11064.jpg" alt="Simulateur D'Aventure De Pêche" class="project-img">
+            <div class="project-content">
+                <span class="tag">Lead Scripter</span> <span class="tag">Live Experience</span> <span class="tag">AquaGame STUDIO</span>
+                <h3>Simulateur D'Aventure De Pêche</h3>
+                <p>Engineered the core gameplay mechanics, tools, and progression systems for this immersive fishing adventure game. Handled all major scripting responsibilities to bring the aquatic world to life.</p>
+                <br><a href="https://www.roblox.com/share?code=8086ff8c10e8c04186a4f3d61354d03b&type=ExperienceDetails&stamp=1771615746763" class="btn" style="font-size: 0.8rem; padding: 8px 20px;" target="_blank">Play Now</a>
+            </div>
+        </div>
         
         <div class="project">
             <div class="project-content">

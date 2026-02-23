@@ -1,198 +1,263 @@
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-local StarterGui = game:GetService("StarterGui")
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almaz Ali | Scripter & Designer</title>
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent: #00ffa3; /* Neon Green/Cyan */
+            --text: #ffffff;
+            --text-gray: #a1a1a1;
+        }
 
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local backpack = player:WaitForChild("Backpack")
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-pcall(function()
-	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
-end)
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 255, 163, 0.1) 0%, rgba(15, 15, 15, 1) 70%);
+        }
 
-local sampleTools = {
-	{Name = "Demon Eye", TextureId = "rbxassetid://101110341266317"},
-	{Name = "Flame Sword", TextureId = "rbxassetid://93281949607026"},
-	{Name = "Void Blade", TextureId = "rbxassetid://82124291931712"},
-	{Name = "Dual Katanas", TextureId = "rbxassetid://77720607171393"}
-}
+        h1 { font-size: 4rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; }
+        h1 span { color: var(--accent); }
+        .subtitle { color: var(--text-gray); font-size: 1.2rem; margin-bottom: 30px; }
 
-for _, data in ipairs(sampleTools) do
-	if not backpack:FindFirstChild(data.Name) then
-		local t = Instance.new("Tool")
-		t.Name = data.Name
-		t.TextureId = data.TextureId
-		t.RequiresHandle = false
-		t.Parent = backpack
-	end
-end
+        .btn {
+            padding: 12px 30px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 50px;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+        .btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 255, 163, 0.4); }
 
-local gui = Instance.new("ScreenGui")
-gui.Name = "RogueCombatHUD"
-gui.IgnoreGuiInset = true
-gui.Parent = player.PlayerGui
+        /* Container */
+        .container { max-width: 1000px; margin: 0 auto; padding: 80px 20px; }
 
-local root = Instance.new("Frame")
-root.AnchorPoint = Vector2.new(0.5,1)
-root.Position = UDim2.new(0.5,0,0.985,0)
-root.BackgroundTransparency = 1
-root.Parent = gui
+        /* Titles & Grid */
+        .section-title { font-size: 2rem; margin-bottom: 40px; border-left: 4px solid var(--accent); padding-left: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
 
-local layout = Instance.new("UIListLayout", root)
-layout.FillDirection = Enum.FillDirection.Horizontal
-layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-layout.Padding = UDim.new(0,6)
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .card h3 { margin-bottom: 10px; color: var(--accent); }
+        .card p { color: var(--text-gray); font-size: 0.9rem; }
 
-local slots = {}
-local toolToSlot = {}
-local indexToTool = {}
+        /* Projects List */
+        .project {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .project-img {
+            width: 250px;
+            border-radius: 10px;
+            margin-right: 25px;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .project-content { flex: 1; }
+        .project h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .tag { 
+            display: inline-block; 
+            background: rgba(0, 255, 163, 0.1); 
+            color: var(--accent); 
+            padding: 5px 12px; 
+            border-radius: 15px; 
+            font-size: 0.8rem; 
+            margin-right: 5px; 
+            margin-bottom: 10px;
+        }
 
-local function resize()
-	task.wait()
-	root.Size = UDim2.new(0, layout.AbsoluteContentSize.X, 0, 64)
-end
+        /* Video Section Styling */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(0, 255, 163, 0.2);
+            margin-bottom: 20px;
+        }
 
-local function clearSelection()
-	for _, s in ipairs(slots) do
-		s.bg.BackgroundColor3 = Color3.fromRGB(18,18,22)
-	end
-end
+        .video-container iframe, .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
 
-local function equip(tool)
-	local slot = toolToSlot[tool]
-	if not slot then return end
+        /* Footer */
+        footer { text-align: center; padding: 50px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-gray); }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .project { flex-direction: column; text-align: left; }
+            .project-img { width: 100%; margin-right: 0; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
 
-	if tool.Parent == character then
-		humanoid:UnequipTools()
-		clearSelection()
-		return
-	end
+    <header class="hero">
+        <h1>I'm <span>Almaz Ali</span>.</h1>
+        <p class="subtitle">Scripter. 3D Designer. Game Developer.<br>B.Sc Animation & Game Design.</p>
+        <a href="#contact" class="btn">Hire Me</a>
+    </header>
 
-	humanoid:EquipTool(tool)
-	clearSelection()
+    <section class="container">
+        
+        <h2 class="section-title">UGC & Accessories Collection</h2>
+        <div class="grid">
+            <div class="card" style="padding: 10px;">
+                <img src="ugc1.png" alt="Crystal Halo" style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                <h3 style="font-size: 1.2rem;">Crystalline Halo</h3>
+                <p>Glowing crystal ring accessory with custom emission textures. Designed for a high-fantasy aesthetic.</p>
+            </div>
+            <div class="card" style="padding: 10px;">
+                <img src="ugc2.png" alt="Mystic Cape" style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                <h3 style="font-size: 1.2rem;">Mystic Owl Cape</h3>
+                <p>Intricate texture work featuring an owl motif and gothic patterns. Optimized UV mapping for Roblox avatars.</p>
+            </div>
+            <div class="card" style="padding: 10px;">
+                <img src="ugc3.png" alt="Celestial Crown" style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                <h3 style="font-size: 1.2rem;">Sun & Moon Tiara</h3>
+                <p>Highly detailed celestial headpiece with gemstone accents. High-poly sculpt baked down for game performance.</p>
+            </div>
+        </div>
 
-	slot.bg.BackgroundColor3 = Color3.fromRGB(120,20,20)
+        <h2 class="section-title" style="margin-top: 60px;">3D Model Gallery</h2>
+        <div class="grid">
+            <div class="card" style="padding: 10px;">
+                <img src="model11.png" alt="Low Poly Tree" style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                <h3 style="font-size: 1.2rem;">Stylized Nature Asset</h3>
+                <p>Low-poly tree model optimized for game performance. Created for environmental map design.</p>
+            </div>
+            <div class="card" style="padding: 10px;">
+                <img src="model12.png" alt="Market Stall" style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                <h3 style="font-size: 1.2rem;">Marketplace Props</h3>
+                <p>Detailed set dressing including a wooden stall, crates, barrels, and sacks. Texturing focused on a stylized RPG look.</p>
+            </div>
+            <div class="card" style="padding: 10px;">
+                <img src="model13.png" alt="Fantasy House" style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                <h3 style="font-size: 1.2rem;">Fantasy Cottage</h3>
+                <p>Stylized building architecture with distinct roof geometry and window detailing. Ready for game implementation.</p>
+            </div>
+        </div>
 
-	TweenService:Create(slot.bg, TweenInfo.new(0.06), {
-		Size = UDim2.new(1,4,1,4),
-		Position = UDim2.new(0,-2,0,-2)
-	}):Play()
+        <h2 class="section-title" style="margin-top: 60px;">UI & Scripting Showcase</h2>
+        
+        <div class="project" style="flex-direction: column; align-items: flex-start; margin-bottom: 40px;">
+            <div class="video-container" style="width: 100%;">
+                <iframe src="https://www.youtube.com/embed/ODbicmQxFmg" title="ToolBox UI Showcase" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="project-content">
+                <span class="tag">UI/UX Design</span> <span class="tag">Inventory Systems</span> <span class="tag">Roblox</span>
+                <h3>Custom ToolBar UI</h3>
+                <p>A sleek, interactive inventory toolbar designed for Roblox experiences. Features smooth selection transitions, item slot numbering, and a modern aesthetic for high-end RPG or adventure games.</p>
+            </div>
+        </div>
 
-	task.delay(0.06, function()
-		TweenService:Create(slot.bg, TweenInfo.new(0.08), {
-			Size = UDim2.new(1,0,1,0),
-			Position = UDim2.new(0,0,0,0)
-		}):Play()
-	end)
-end
+        <div class="project" style="flex-direction: column; align-items: flex-start;">
+            <div class="video-container" style="width: 100%;">
+                <iframe src="https://www.youtube.com/embed/nOSmcBLEbF4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="project-content">
+                <span class="tag">UI/UX Design</span> <span class="tag">Luau Scripting</span>
+                <h3>Custom Roblox Game UI</h3>
+                <p>A full-scale UI system designed for high-intensity PVP games. This showcase demonstrates the animations, responsiveness, and clean aesthetic I developed for modern Roblox experiences.</p>
+            </div>
+        </div>
 
-local function createSlot(tool, index)
-	local holder = Instance.new("Frame")
-	holder.Size = UDim2.new(0,56,0,56)
-	holder.BackgroundTransparency = 1
-	holder.Parent = root
+        <h2 class="section-title" style="margin-top: 60px;">Featured Projects</h2>
 
-	local bg = Instance.new("Frame")
-	bg.Size = UDim2.new(1,0,1,0)
-	bg.BackgroundColor3 = Color3.fromRGB(18,18,22)
-	bg.BorderSizePixel = 0
-	bg.Parent = holder
+        <div class="project">
+            <img src="11064.jpg" alt="Simulateur D'Aventure De Pêche" class="project-img">
+            <div class="project-content">
+                <span class="tag">Lead Scripter</span> <span class="tag">Live Experience</span> <span class="tag">AquaGame STUDIO</span>
+                <h3>Simulateur D'Aventure De Pêche</h3>
+                <p>Engineered the core gameplay mechanics, tools, and progression systems for this immersive fishing adventure game. Handled all major scripting responsibilities to bring the aquatic world to life.</p>
+                <br><a href="https://www.roblox.com/share?code=8086ff8c10e8c04186a4f3d61354d03b&type=ExperienceDetails&stamp=1771615746763" class="btn" style="font-size: 0.8rem; padding: 8px 20px;" target="_blank">Play Now</a>
+            </div>
+        </div>
+        
+        <div class="project">
+            <div class="project-content">
+                <span class="tag">UGC Item</span> <span class="tag">Live on Roblox</span>
+                <h3>MNC Official Tag</h3>
+                <p>A custom 3D accessory created for the Multi National Crew. Modeled, textured, and successfully uploaded to the Roblox Marketplace for public sale.</p>
+                <br><a href="#" class="btn" style="font-size: 0.8rem; padding: 8px 20px;">View on Roblox</a>
+            </div>
+        </div>
 
-	local stroke = Instance.new("UIStroke", bg)
-	stroke.Color = Color3.fromRGB(70,70,80)
-	stroke.Thickness = 1
+        <div class="project">
+            <div class="project-content">
+                <span class="tag">Game Development</span> <span class="tag">Showcase</span>
+                <h3>Valentine Special: For The Special One</h3>
+                <p>An immersive, atmospheric showcase game featuring custom scripting, lighting, and 3D environment design.</p>
+                <br><a href="https://www.roblox.com/share?code=eb77a3ef45486144b8e48b40216f6896&type=ExperienceDetails&stamp=1771421529811" class="btn" style="font-size: 0.8rem; padding: 8px 20px;" target="_blank">Play Now</a>
+            </div>
+        </div>
 
-	local icon = Instance.new("ImageButton")
-	icon.Size = UDim2.new(0.72,0,0.72,0)
-	icon.Position = UDim2.new(0.5,0,0.5,0)
-	icon.AnchorPoint = Vector2.new(0.5,0.5)
-	icon.BackgroundTransparency = 1
-	icon.Image = tool.TextureId
-	icon.Parent = bg
+        <div class="project">
+            <div class="project-content">
+                <span class="tag">Business</span> <span class="tag">3D Design</span>
+                <h3>Almaz Ali Studios</h3>
+                <p>Founder of a dedicated 3D design studio offering freelance modeling and game asset creation services.</p>
+            </div>
+        </div>
 
-	local key = Instance.new("TextLabel")
-	key.Text = tostring(index)
-	key.Size = UDim2.new(0,14,0,14)
-	key.Position = UDim2.new(0,2,0,2)
-	key.BackgroundTransparency = 1
-	key.TextColor3 = Color3.fromRGB(170,170,180)
-	key.TextScaled = true
-	key.Font = Enum.Font.GothamBold
-	key.Parent = bg
+    </section>
 
-	local name = Instance.new("TextLabel")
-	name.Text = tool.Name
-	name.Size = UDim2.new(1,0,0,12)
-	name.Position = UDim2.new(0,0,1,-12)
-	name.BackgroundTransparency = 1
-	name.TextColor3 = Color3.fromRGB(140,140,150)
-	name.TextScaled = true
-	name.Font = Enum.Font.Gotham
-	name.Parent = bg
+    <footer id="contact">
+        <h2 style="color: white; margin-bottom: 20px;">Let's Work Together</h2>
+        <p>Open for commissions in Scripting, UGC, and 3D Modeling.</p>
+        <br>
+        
+        <div style="margin-bottom: 10px;">
+            <span style="color: #00ffa3; font-weight: bold; font-size: 1.2rem;">Discord:</span> 
+            <span style="font-size: 1.2rem;">snackkiieeee</span>
+        </div>
 
-	local cooldown = Instance.new("Frame")
-	cooldown.Size = UDim2.new(1,0,1,0)
-	cooldown.BackgroundColor3 = Color3.fromRGB(0,0,0)
-	cooldown.BackgroundTransparency = 1
-	cooldown.Parent = bg
+        <p><strong>Roblox:</strong> <a href="https://www.roblox.com/users/3339686001/profile" target="_blank" style="color: white; text-decoration: underline;">snackkiieeee</a></p>
+        <p><strong>Email:</strong> yaararyann@gmail.com</p>
+        <p><strong>Location:</strong> Meerut, India (Remote Available)</p>
+        
+        <br><br>
+        <p style="font-size: 0.8rem;">© 2026 Almaz Ali. All Rights Reserved.</p>
+    </footer>
 
-	icon.MouseButton1Click:Connect(function()
-		equip(tool)
-	end)
-
-	local slotData = {bg = bg, cooldown = cooldown}
-	table.insert(slots, slotData)
-	toolToSlot[tool] = slotData
-	indexToTool[index] = tool
-	resize()
-end
-
-local index = 0
-
-local function addTool(tool)
-	if not tool:IsA("Tool") then return end
-	if toolToSlot[tool] then return end
-	index += 1
-	createSlot(tool, index)
-end
-
-for _, t in ipairs(backpack:GetChildren()) do
-	addTool(t)
-end
-
-backpack.ChildAdded:Connect(addTool)
-character.ChildAdded:Connect(addTool)
-
-UserInputService.InputBegan:Connect(function(input, gpe)
-	if gpe then return end
-	if input.UserInputType ~= Enum.UserInputType.Keyboard then return end
-
-	local num = tonumber(input.KeyCode.Name:match("%d"))
-	if num and indexToTool[num] then
-		equip(indexToTool[num])
-	end
-end)
-
-local function triggerCooldown(tool, duration)
-	local slot = toolToSlot[tool]
-	if not slot then return end
-
-	local cd = slot.cooldown
-	cd.BackgroundTransparency = 0.4
-	cd.Size = UDim2.new(1,0,1,0)
-
-	TweenService:Create(cd, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
-		Size = UDim2.new(1,0,0,0)
-	}):Play()
-
-	task.delay(duration, function()
-		cd.BackgroundTransparency = 1
-	end)
-end
-
--- Example cooldown trigger (remove in production)
--- task.delay(3, function()
--- 	triggerCooldown(indexToTool[1], 5)
--- end)
+</body>
+</html>
